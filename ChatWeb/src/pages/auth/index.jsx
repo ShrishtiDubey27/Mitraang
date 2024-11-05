@@ -1,7 +1,7 @@
 import Background from "@/assets/login2.png";
 import Victory from "@/assets/victory.svg";
 import { Tabs } from "@/components/ui/tabs";
-
+import { Button } from "@/components/ui/button"
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { Input } from '@/components/ui/input';
@@ -64,7 +64,7 @@ const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                 
+                 <Button className="rounded-full p-6" onClick={handleLogin}>Login</Button>
               </TabsContent>
               <TabsContent className="flex flex-col gap-5 " value="signup">
                 <Input
@@ -88,9 +88,14 @@ const Auth = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
+                 <Button className="rounded-full p-6" onClick={handleSignup}>Sign Up</Button>
               </TabsContent>
             </Tabs>
           </div>
+        </div>
+
+        <div className="hidden xl:flex justify-center items-center">
+          <img src={Background} className="h-[500px]" alt="" />
         </div>
       </div>
     </div>
