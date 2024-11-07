@@ -106,7 +106,7 @@ export const updateProfile = async (request, response, next) => {
     const { userId } = request;
     const { firstName, lastName, color } = request.body;
 
-    if (!firstName || !lastName || color!==undefined) {
+    if (!firstName || !lastName ) {
       return response
         .status(400)
         .send("Firstname ,LastName and color is required");

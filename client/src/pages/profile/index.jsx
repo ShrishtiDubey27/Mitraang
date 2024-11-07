@@ -20,46 +20,35 @@ const Profile = () => {
   const [hovered, setHovered] = useState(false);
   const [selectedColor, setSelectedColor] = useState(0);
 
-  const validateProfile=()=>{
-    if(!firstName)
-    {
-      toast.error("First Name is required.")
-      return false
+  const validateProfile = () => {
+    if (!firstName) {
+      toast.error("First Name is required.");
+      return false;
     }
-    if(!lastName)
-    {
-      toast.error("Last Name is required.")
-      return false
+    if (!lastName) {
+      toast.error("Last Name is required.");
+      return false;
     }
-    return  true;
-  }
-
-
+    return true;
+  };
 
   const saveChanges = async () => {
-   if(validateProfile())
-   {
-    try {
-      const response=await apiClient.post(
-        UPDATE_PROFILE_ROUTE,
-        {firstName,lastName,color:selectedColor},
-        {withCredentials:true}
-      )
-      if(response.status===200 && response.data)
-      {
-        setUserInfo({...response.data});
-        toast.success("Profile Updated Successfully");
-        navigate("/chat")
+    if (validateProfile()) {
+      try {
+        const response = await apiClient.post(
+          UPDATE_PROFILE_ROUTE,
+          { firstName, lastName, color: selectedColor },
+          { withCredentials: true }
+        );
+        if (response.status === 200 && response.data) {
+          setUserInfo({ ...response.data });
+          toast.success("Profile Updated Successfully");
+          navigate("/chat");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
-   }
-    };
-
-    
-    setUserInfo(updatedUserInfo);
-   
   };
 
   return (
@@ -68,7 +57,7 @@ const Profile = () => {
         <div>
           <IoArrowBack
             className="text-4xl lg:text-6xl text-white/90 cursor-pointer"
-            onClick={() => navigate(-1)} 
+            onClick={() => navigate(-1)}
           />
         </div>
         <div className="grid grid-cols-2">
@@ -131,7 +120,7 @@ const Profile = () => {
               <Input
                 placeholder="Last Name"
                 type="text"
-                onChange={(e) => setLastName(e.target.value)} 
+                onChange={(e) => setLastName(e.target.value)}
                 value={lastName}
                 className="rounded-lg p-6 bg-[#2c2e3b] border-none"
               />
@@ -140,8 +129,7 @@ const Profile = () => {
             <div className="w-full flex gap-5">
               {colors.map((color, index) => (
                 <div
-                  className={`${color} h-8 w-8 rounded-full cursor-pointer transition-all duration-300
-                  ${
+                  className={`${color} h-8 w-8 rounded-full cursor-pointer transition-all duration-300 ${
                     selectedColor === index
                       ? "outline outline-white/50 outline-1"
                       : ""
