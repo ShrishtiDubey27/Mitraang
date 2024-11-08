@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import { UPDATE_PROFILE_ROUTE, ADD_PROFILE_IMAGE_ROUTE, REMOVE_PROFILE_IMAGE_ROUTE } from "@/utils/constant";
+import { HOST } from '@/utils/constant';
+
 
 
 const Profile = () => {
@@ -22,18 +24,16 @@ const Profile = () => {
   const [selectedColor, setSelectedColor] = useState(0);
   const fileInputRef = useRef(null);
 
+
   useEffect(() => {
-    if (userInfo.profileSetup) {
-      setFirstName(userInfo.firstName);
-      setLastName(userInfo.lastName);
-      setSelectedColor(userInfo.color);
-    }
-    if(userInfo.image)
-    {
-      console.log("HOST:", HOST);
-      setImage(`${HOST}/${userInfo.image}`)
+    setFirstName(userInfo.firstName);
+    setLastName(userInfo.lastName);
+    setSelectedColor(userInfo.color);
+    if (userInfo.image) {
+      setImage(`${HOST}/${userInfo.image}`);
     }
   }, [userInfo]);
+  
 
   const validateProfile = () => {
     if (!firstName) {
@@ -48,23 +48,26 @@ const Profile = () => {
   };
 
   const saveChanges = async () => {
-    if (validateProfile()) {
-      try {
-        const response = await apiClient.post(
-          UPDATE_PROFILE_ROUTE,
-          { firstName, lastName, color: selectedColor },
-          { withCredentials: true }
-        );
-        if (response.status === 200 && response.data) {
-          setUserInfo({ ...response.data });
-          toast.success("Profile Updated Successfully");
-          navigate("/chat");
-        }
-      } catch (error) {
-        console.log(error);
+    if (!validateProfile()) return;
+    try {
+      const response = await apiClient.post(
+        UPDATE_PROFILE_ROUTE,
+        { firstName, lastName, color: selectedColor },
+        { withCredentials: true }
+      );
+      if (response.status === 200 && response.data) {
+        setUserInfo({ ...response.data });
+        toast.success("Profile Updated Successfully");
+        navigate("/chat");
+      } else {
+        toast.error("Failed to update profile");
       }
+    } catch (error) {
+      console.error("Profile update error:", error);
+      toast.error("An error occurred while updating the profile.");
     }
   };
+  
 
   const handleNavigate = () => {
     if (userInfo.profileSetup) {
@@ -79,21 +82,22 @@ const Profile = () => {
   };
 
   const handleImageChange = async (event) => {
-    const file=event.target.files[0];
-    console.log({file});
-    if(file)
-    {
-      const formData=new  FormData();
-      formData.append("profile-image",file);
-      const response = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE,formData,{withCredentials:true});
-      if(response.status===200 && response.data.image)
-      {
-        setUserInfo({...userInfo,image:response.data.image});
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("profile-image", file);
+      const response = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE, formData, {
+        withCredentials: true,
+      });
+      if (response.status === 200 && response.data.image) {
+        console.log("Updated Image Path:", response.data.image);
+        setUserInfo({ ...userInfo, image: response.data.image });
+        setImage(`${HOST}/${response.data.image}`);
         toast.success("Image updated successfully");
       }
-    
-        }
+    }
   };
+  
 
   const handleDeleteImage = async () => {
     try {
@@ -131,7 +135,7 @@ const Profile = () => {
                 <AvatarImage
                   src={image}
                   alt="profile"
-                  className="object-cover w-full h-full bg-black"
+                  className="object-cover w-full h-full"
                 />
               ) : (
                 <div
