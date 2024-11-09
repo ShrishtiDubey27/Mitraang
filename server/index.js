@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoutes.js";
 import contactRoutes from "./routes/ContactRoutes.js";
+import setupSocket from "./socket.js";
 
 dotenv.config();
 
@@ -27,9 +28,12 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts",contactRoutes)
-app.get("/", (req, res) => {
-  res.send("API Working");
+
+const server = app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });
+
+setupSocket(server)
 
 mongoose
   .connect(databaseURL)
@@ -40,6 +44,4 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send({ error: "Something went wrong!" });
 });
-const server = app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+
