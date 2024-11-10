@@ -22,6 +22,23 @@ export const SocketProvider = ({ children }) => {
       socket.current.on("connect",()=>{
         console.log("connected to socket server");
       });
+
+      const handleRecieveMessage =(message)=>{
+        console.log("Message received from server:", message); 
+      const {selectedChatData,selectedChatType,addMessage}=useAppStore.getState();
+
+        if(selectedChatType && 
+           (selectedChatData._id===message.sender._id ||
+            selectedChatData._id === message.recipient._id)
+           )
+           {
+            console.log("message recieved",message)
+            addMessage(message);
+           }
+      };
+
+      socket.current.on("recieveMessage",handleRecieveMessage)
+
       return()=>{
         socket.current.disconnect();
       };
