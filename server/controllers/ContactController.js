@@ -1,5 +1,6 @@
 import Message from "../models/MessagesModel.js";
 import User from "../models/UserModel.js";
+import mongoose from "mongoose";
 
 export const searchContacts = async (request, response, next) => {
   try {
@@ -33,7 +34,7 @@ export const searchContacts = async (request, response, next) => {
 
 export const getConatctsForDMList = async (request, response, next) => {
   try {
-    let {userId}=req;
+    let {userId}=request;
     userId=new mongoose.Types.ObjectId(userId);
     const contacts =await Message.aggregate([
       {
@@ -53,7 +54,7 @@ export const getConatctsForDMList = async (request, response, next) => {
               else:"$sender",
             },
           },
-          lastMessageTime:{$first :$timestamp},
+          lastMessageTime:{$first :"$timestamp"},
         },
       },
 

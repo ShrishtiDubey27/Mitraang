@@ -1,9 +1,27 @@
+import { useEffect } from "react";
 import NewDm from "./components/new-dm";
 import ProfileInfo from "./components/profile-info";
+import { apiClient } from "@/lib/api-client";
+import { GET_DM_CONTACTS_ROUTES } from "@/utils/constant";
 
 const ContactConatiner = () => {
 
-   
+   useEffect(()=>{
+    const getContacts = async () => {
+      try {
+        const response = await apiClient.get(GET_DM_CONTACTS_ROUTES, {
+          withCredentials: true,
+        });
+        if (response.data.contacts) {
+          console.log(response.data.contacts);
+        }
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    };
+    
+    getContacts();
+   },[]);
 
 
   return (
