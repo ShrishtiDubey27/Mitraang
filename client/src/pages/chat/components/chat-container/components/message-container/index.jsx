@@ -4,14 +4,14 @@ import { useEffect, useRef } from "react"
 
 const MessageContainer = () => {
    const scrollRef=useRef();
-  const {selectedChatData,userInfo,selectedChatMessages,selectedChatType}=useAppStore()
+  const {selectedChatData,userInfo,selectedChatType,selectedChatMessages}=useAppStore()
 
   useEffect(()=>{
     if(scrollRef.current)
     {
       scrollRef.current.scrollIntoView({behavior:"smooth"});
     }
-  },[setSelectedChatMessages]);
+  },[selectedChatMessages]);
 
   const renderMessages =()=>{
   let lastDate=null;
@@ -20,6 +20,8 @@ const MessageContainer = () => {
     const messageDate=moment(message.timestamp).format("YYYY-MM-DD");
     const showDate= messageDate!==lastDate;
     lastDate=messageDate;
+
+
     return(
       <div key={index}>
          {showDate &&(
@@ -46,7 +48,7 @@ const MessageContainer = () => {
       message.sender !==selectedChatData._id 
       ?"bg-[#8417ff]/5  text-[#8417ff]/90 border-[#8417ff]/50"
       :"bg-[#2a2b33]/5  text-white/80 border-[#ffffff]/20"
-    } border inline-block p4' rounded my-1 max-w-[50%] break-words`}
+    } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
     >
       {message.content}
     </div>

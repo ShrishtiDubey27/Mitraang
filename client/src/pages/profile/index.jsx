@@ -26,9 +26,12 @@ const Profile = () => {
 
 
   useEffect(() => {
+  if(userInfo.profileSetup)
+  {
     setFirstName(userInfo.firstName);
     setLastName(userInfo.lastName);
     setSelectedColor(userInfo.color);
+  }
     if (userInfo.image) {
       setImage(`${HOST}/${userInfo.image}`);
     }
@@ -90,7 +93,6 @@ const Profile = () => {
         withCredentials: true,
       });
       if (response.status === 200 && response.data.image) {
-        console.log("Updated Image Path:", response.data.image);
         setUserInfo({ ...userInfo, image: response.data.image });
         setImage(`${HOST}/${response.data.image}`);
         toast.success("Image updated successfully");

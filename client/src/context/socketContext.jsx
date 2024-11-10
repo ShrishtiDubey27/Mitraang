@@ -11,7 +11,7 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }) => {
   const socket = useRef();
-  const userInfo = useAppStore();
+  const {userInfo} = useAppStore();
 
   useEffect(() => {
     if (userInfo) {
@@ -24,7 +24,6 @@ export const SocketProvider = ({ children }) => {
       });
 
       const handleRecieveMessage =(message)=>{
-        console.log("Message received from server:", message); 
       const {selectedChatData,selectedChatType,addMessage}=useAppStore.getState();
 
         if(selectedChatType && 
@@ -32,7 +31,6 @@ export const SocketProvider = ({ children }) => {
             selectedChatData._id === message.recipient._id)
            )
            {
-            console.log("message recieved",message)
             addMessage(message);
            }
       };
