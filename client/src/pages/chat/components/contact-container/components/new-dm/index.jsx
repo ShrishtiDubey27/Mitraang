@@ -129,7 +129,7 @@ const NewDm = () => {
       )}
 
           {searchedContacts.length <= 0 && (
-            <div className="flex-1  md:flex flex-col justify-center items-center md:mt-0 mt-5 duration-1000 transition-all">
+            <div className="flex-1  md:flex flex-col mt-5 md:mt-0    justify-center items-center duration-1000 transition-all">
               <Lottie
                 isClickToPauseDisabled={true}
                 height={100}
