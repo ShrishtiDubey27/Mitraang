@@ -15,27 +15,26 @@ const MessageContainer = () => {
   } = useAppStore();
 
   useEffect(() => {
-    const getMessages =async ()=>{
-    try {
-      const response= await apiClient.post(
-        GET_ALL_MESSAGES_ROUTE,
-        {id:selectedChatData._id},
-        {withCredentials:true}
-    );
+    const getMessages = async () => {
+      try {
+        const response = await apiClient.get(
+          GET_ALL_MESSAGES_ROUTE,
+          { id: selectedChatData._id },
+          { withCredentials: true }
+        );
 
-    if(response.data.messages)
-    {
-      setSelectedChatMessages(response.data.messages);
+        if (response.data.messages) {
+          setSelectedChatMessages(response.data.messages);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
+    if (selectedChatData._id) {
+      if (selectedChatType === "contact") getMessages();
     }
-    } catch (error) {
-      console.log(error)
-    }
-    }
-    if(selectedChatData._id)
-    {
-      if(selectedChatData === "contact") getMessages();
-    }
-  }, [selectedChatData, selectedChatType,setSelectedChatMessages]);
+  }, [selectedChatData, selectedChatType, setSelectedChatMessages]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -64,28 +63,28 @@ const MessageContainer = () => {
   };
 
   const renderDMMessages = (message) => {
-    // return (
-    <div
-      className={`${
-        message.sender === selectedChatData._id ? "text-left" : "text-right"
-      }`}
-    >
-      {message.messageType === "text" && (
-        <div
-          className={`${
-            message.sender !== selectedChatData._id
-              ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
-              : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
-          } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
-        >
-          {message.content}
+    return (
+      <div
+        className={`${
+          message.sender === selectedChatData._id ? "text-left" : "text-right"
+        }`}
+      >
+        {message.messageType === "text" && (
+          <div
+            className={`${
+              message.sender !== selectedChatData._id
+                ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
+                : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
+            } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
+          >
+            {message.content}
+          </div>
+        )}
+        <div className="text-xs text-gray-600">
+          {moment(message.timestamp).format("LT")}
         </div>
-      )}
-      <div className="text-xs text-gray-600">
-        {moment(message.timestamp).format("LT")}
       </div>
-    </div>;
-    // );
+    );
   };
 
   return (
