@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import ChatContainer from "./components/chat-container";
-import ContactsContainer from "./components/contacts-container";
+import ContactsContainer from "./components/contact-container";
 import { useAppStore } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
