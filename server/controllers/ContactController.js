@@ -1,44 +1,73 @@
-import Message from "../models/MessagesModel.js";
-import User from "../models/UserModel.js";
 import mongoose from "mongoose";
+import User from "../models/UserModel.js";
+import Message from "../models/MessagesModel.js";
 
-// Function to search for contacts
-export const searchContacts = async (request, response) => {
+export const getAllContacts = async (request, response, next) => {
+  try {
+    const users = await User.find(
+      { _id: { $ne: request.userId } },
+      "firstName lastName _id"
+    );
+
+    const contacts = users.map((user) => ({
+      label: `${user.firstName} ${user.lastName}`,
+      value: user._id,
+    }));
+
+    return response.status(200).json({ contacts });
+  } catch (error) {
+    console.log({ error });
+    return response.status(500).send("Internal Server Error.");
+  }
+};
+
+export const searchContacts = async (request, response, next) => {
   try {
     const { searchTerm } = request.body;
-    if (!searchTerm) {
-      return response.status(400).send("searchTerm is required.");
+
+    if (searchTerm === undefined || searchTerm === null) {
+      return response.status(400).send("Search Term is required.");
     }
 
-    const sanitizedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const sanitizedSearchTerm = searchTerm.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&"
+    );
+
     const regex = new RegExp(sanitizedSearchTerm, "i");
 
     const contacts = await User.find({
       $and: [
         { _id: { $ne: request.userId } },
-        { $or: [{ firstName: regex }, { lastName: regex }, { email: regex }] },
+        {
+          $or: [{ firstName: regex }, { lastName: regex }, { email: regex }],
+        },
       ],
     });
-
     return response.status(200).json({ contacts });
   } catch (error) {
-    console.error("Error in searchContacts:", error);
-    return response.status(500).send("Internal Server Error");
+    console.log({ error });
+    return response.status(500).send("Internal Server Error.");
   }
 };
 
-// Function to get contacts for the direct message list
-export const getConatctsForDMList = async (request, response) => {
+export const getContactsForList = async (req, res, next) => {
   try {
-    const userId = new mongoose.Types.ObjectId(request.userId);
+    let { userId } = req;
+    userId = new mongoose.Types.ObjectId(userId);
 
+    if (!userId) {
+      return res.status(400).send("User ID is required.");
+    }
     const contacts = await Message.aggregate([
       {
         $match: {
           $or: [{ sender: userId }, { recipient: userId }],
         },
       },
-      { $sort: { timestamp: -1 } },
+      {
+        $sort: { timestamp: -1 },
+      },
       {
         $group: {
           _id: {
@@ -59,10 +88,13 @@ export const getConatctsForDMList = async (request, response) => {
           as: "contactInfo",
         },
       },
-      { $unwind: "$contactInfo" },
+      {
+        $unwind: "$contactInfo",
+      },
       {
         $project: {
           _id: 1,
+
           lastMessageTime: 1,
           email: "$contactInfo.email",
           firstName: "$contactInfo.firstName",
@@ -71,12 +103,14 @@ export const getConatctsForDMList = async (request, response) => {
           color: "$contactInfo.color",
         },
       },
-      { $sort: { lastMessageTime: -1 } },
+      {
+        $sort: { lastMessageTime: -1 },
+      },
     ]);
 
-    return response.status(200).json({ contacts });
+    return res.status(200).json({ contacts });
   } catch (error) {
-    console.error("Error in getConatctsForDMList:", error);
-    return response.status(500).send("Internal Server Error");
+    console.error("Error getting user contacts:", error);
+    return res.status(500).send("Internal Server Error");
   }
 };

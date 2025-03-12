@@ -13,7 +13,7 @@ const messageSchema = new mongoose.Schema({
   },
   messageType: {
     type: String,
-    enum: ["text", "file"],
+    enum: ["text", "audio", "file"],
     required: true,
   },
   content: {
@@ -22,7 +22,13 @@ const messageSchema = new mongoose.Schema({
       return this.messageType === "text";
     },
   },
-  fileURL: {
+  audioUrl: {
+    type: String,
+    required: function () {
+      return this.messageType === "audio";
+    },
+  },
+  fileUrl: {
     type: String,
     required: function () {
       return this.messageType === "file";
@@ -34,5 +40,5 @@ const messageSchema = new mongoose.Schema({
   },
 });
 
-const Message =mongoose.model("Messages",messageSchema);
+const Message = mongoose.model("Messages", messageSchema);
 export default Message;
