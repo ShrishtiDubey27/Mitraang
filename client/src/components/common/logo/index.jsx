@@ -1,32 +1,28 @@
 const Logo = () => {
   return (
-    <div className="flex p-5  justify-start items-center gap-2">
+    <div className="flex p-5 justify-start items-center gap-2">
       <svg
-        id="logo-38"
-        width="78"
-        height="32"
-        viewBox="0 0 78 32"
+        width="80"
+        height="50"
+        viewBox="0 0 80 50"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {" "}
+        {/* Chat bubble shape */}
         <path
-          d="M55.5 0H77.5L58.5 32H36.5L55.5 0Z"
-          className="ccustom"
+          d="M10 10 Q10 0, 20 0 L60 0 Q70 0, 70 10 L70 30 Q70 40, 60 40 L30 40 L15 45 L17 35 Q10 35, 10 30 Z"
           fill="#8338ec"
-        ></path>{" "}
+        />
+        {/* "M" inside the chat bubble */}
         <path
-          d="M35.5 0H51.5L32.5 32H16.5L35.5 0Z"
-          className="ccompli1"
-          fill="#975aed"
-        ></path>{" "}
-        <path
-          d="M19.5 0H31.5L12.5 32H0.5L19.5 0Z"
-          className="ccompli2"
-          fill="#a16ee8"
-        ></path>{" "}
+          d="M25 30 L25 15 L35 30 L45 15 L45 30"
+          stroke="white"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
-      <span className="text-3xl font-semibold ">Syncronus</span>
+      <span className="text-3xl font-semibold">Mitraang</span>
     </div>
   );
 };
