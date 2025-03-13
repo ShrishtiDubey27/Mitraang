@@ -9,6 +9,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/store";
+import bgImage from '../../assets/bg.png';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -85,8 +86,11 @@ const Auth = () => {
   };
 
   return (
-    <div className="h-[100vh] w-[100vw] flex items-center justify-center">
-      <div className="h-[80vh] bg-white  border-2 border-white  text-opacity-90 shadow-2xl w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">
+    <div  style={{
+      backgroundImage: `url(${bgImage})`,
+    }} className="h-[100vh] w-[100vw] flex items-center justify-center">
+     <div className="h-[80vh] bg-white border-2 border-white text-opacity-90 shadow-[0px_30px_50px_rgba(0,0,0,1)] w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">
+
         <div className="flex flex-col gap-10 items-center justify-center">
           <div className="flex  items-center justify-center flex-col">
             <div className="flex  items-center justify-center">
@@ -162,7 +166,7 @@ const Auth = () => {
           </div>
         </div>
         <div className="hidden xl:flex justify-center items-center ">
-          <img src={Background} className="h-[700px] " />
+          <img src={Background} className="h-[500px] " />
         </div>
 
         {/* Login Signup COmponent */}
